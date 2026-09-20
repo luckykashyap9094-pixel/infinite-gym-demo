@@ -94,6 +94,30 @@
     .play-btn:hover { transform: translate(-50%, -50%) scale(1.1); background: #fff; box-shadow: 0 0 45px rgba(255,255,255,0.5); }
     .play-btn:hover i { color: var(--accent-red) !important; }
 
+    /* Custom Popup Modal Styles */
+    .custom-modal {
+      display: none; position: fixed; z-index: 999999; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
+      align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .custom-modal.show { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--bg-card); border: 2px solid var(--accent-red); border-radius: 12px;
+      padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; position: relative;
+      transform: scale(0.8); transition: transform 0.3s ease; box-shadow: 0 20px 60px rgba(225, 29, 72, 0.25);
+    }
+    .custom-modal.show .modal-content { transform: scale(1); }
+    .close-btn { position: absolute; top: 15px; right: 20px; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: 0.3s; }
+    .close-btn:hover { color: var(--accent-red); }
+    .modal-icon { font-size: 3rem; color: var(--accent-red); margin-bottom: 20px; text-shadow: 0 0 20px var(--glow-red); }
+    .modal-content h3 { font-family: 'Oswald', sans-serif; font-size: 1.8rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; color: #fff;}
+    .modal-content p { font-size: 1.05rem; color: #cbd5e1; margin-bottom: 30px; line-height: 1.5; }
+    .modal-ok-btn {
+      background: var(--accent-red); color: #fff; border: none; padding: 12px 35px; border-radius: 4px;
+      font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .modal-ok-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px var(--glow-red); transform: translateY(-2px);}
+
     /* Grid Sections */
     .facility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
     .facility-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 35px 25px; text-align: center; transition: 0.4s; backdrop-filter: blur(10px); }
@@ -156,7 +180,7 @@
     </div>
   </header>
 
-  <!-- Video Poster Section (Fail-proof) -->
+  <!-- Video Poster Section -->
   <section class="sec-container" style="background: rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); padding-top: 60px; padding-bottom: 60px;">
     <div class="sec-header" data-aos="fade-up">
       <h2>The <span>Infinite</span> Vibe</h2>
@@ -168,8 +192,8 @@
       
       <!-- High Quality Gym Poster Image -->
       <div class="video-container" style="background: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80') center/cover; position: relative;">
-        <!-- Glowing Red Play Button -->
-        <div class="play-btn" onclick="alert('Bhaiya, yahan aapke gym ki original tour video aayegi jab aap final confirm karenge!')">
+        <!-- Glowing Red Play Button triggering the Custom Modal -->
+        <div class="play-btn" onclick="openVideoModal()">
           <i class="fa-solid fa-play" style="color: #fff; font-size: 1.8rem; margin-left: 6px;"></i>
         </div>
       </div>
@@ -244,8 +268,20 @@
     <p style="margin-top: 8px; font-size: 0.75rem; color: #555;">Website Powered by <span style="color:var(--accent-red);">Apex Studios Dhanbad</span> | Flat ₹1,999 Express Setup</p>
   </footer>
 
+  <!-- CUSTOM POPUP MODAL (Hidden by default) -->
+  <div id="videoModal" class="custom-modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeVideoModal()">&times;</span>
+      <div class="modal-icon"><i class="fa-solid fa-video"></i></div>
+      <h3>Video Space Reserved</h3>
+      <p>Sir, yahan aapke gym ki original tour video aayegi jab aap final confirm karenge!</p>
+      <button class="modal-ok-btn" onclick="closeVideoModal()">Okay, Got It!</button>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
+    // Preloader and AOS initialization
     window.addEventListener('load', () => {
       gsap.to(".loader-bar", { width: "100%", duration: 1.2, ease: "power2.inOut" });
       setTimeout(() => {
@@ -255,6 +291,31 @@
         }});
       }, 1400);
     });
+
+    // Custom Modal Functions
+    function openVideoModal() {
+      const modal = document.getElementById('videoModal');
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300); // Wait for transition to finish
+    }
+
+    // Close modal if user clicks outside the box
+    window.onclick = function(event) {
+      const modal = document.getElementById('videoModal');
+      if (event.target == modal) {
+        closeVideoModal();
+      }
+    }
   </script>
 </body>
 </html>
