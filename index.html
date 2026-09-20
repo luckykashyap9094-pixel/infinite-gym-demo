@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinite Gym | Premium Fitness Studio in Dhanbad</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #050505;
+      --bg-card: rgba(15, 15, 18, 0.75);
+      --bg-card-hover: rgba(25, 25, 30, 0.9);
+      --accent-red: #e11d48; /* High energy gym red */
+      --accent-gold: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --glow-red: rgba(225, 29, 72, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+
+    /* Dark Motivational Background Theme */
+    .bg-main-image {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&auto=format&fit=crop&q=80');
+      background-size: cover; background-position: center; z-index: -2; opacity: 0.8;
+    }
+    .bg-dark-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(5,5,5,0.95) 0%, rgba(15,0,0,0.85) 100%);
+      backdrop-filter: blur(5px); z-index: -1;
+    }
+
+    /* Preloader */
+    #preloader { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; }
+    .loader-title { font-family: 'Oswald', sans-serif; font-size: 3rem; font-weight: 700; color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; }
+    .loader-title span { color: var(--accent-red); }
+    .loader-bar-wrap { width: 200px; height: 3px; background: rgba(255,255,255,0.1); overflow: hidden; }
+    .loader-bar { width: 0%; height: 100%; background: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(5, 5, 5, 0.7); backdrop-filter: blur(20px);
+      padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-subtle);
+    }
+    .logo { font-family: 'Oswald', sans-serif; font-size: 1.6rem; font-weight: 700; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; letter-spacing: 1px;}
+    .logo i { color: var(--accent-red); }
+    .nav-btn { background: var(--accent-red); color: #fff; padding: 10px 22px; border-radius: 4px; font-weight: 700; text-decoration: none; font-size: 0.9rem; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .nav-btn:hover { background: #fff; color: #000; box-shadow: 0 0 15px var(--glow-red); }
+
+    /* Hero Section */
+    .hero-reel { position: relative; width: 100%; min-height: 85vh; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 70px 20px; z-index: 1; }
+    .reel-content { position: relative; z-index: 2; text-align: center; max-width: 800px; }
+    
+    .rating-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.6); color: var(--accent-gold); padding: 8px 20px; border-radius: 4px; font-weight: 700; font-size: 0.9rem; margin-bottom: 25px; border: 1px solid rgba(245, 158, 11, 0.3); backdrop-filter: blur(8px); text-transform: uppercase; }
+    .hero-reel h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 7vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; letter-spacing: -1px; }
+    .hero-reel h1 span { color: var(--accent-red); text-shadow: 0 0 20px var(--glow-red); }
+    .hero-reel p { font-size: 1.15rem; color: #cbd5e1; margin-bottom: 35px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+    
+    .btn-book { background: #fff; color: #000; padding: 16px 40px; border-radius: 4px; font-size: 1.1rem; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 12px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-book:hover { background: var(--accent-red); color: #fff; box-shadow: 0 8px 30px var(--glow-red); transform: translateY(-3px); }
+
+    /* Floating Dumbbell Elements */
+    .floating-png { position: absolute; opacity: 0.15; filter: drop-shadow(0 10px 20px rgba(0,0,0,1)); pointer-events: none; animation: floatSlow 6s ease-in-out infinite alternate; }
+    .png-left { top: 20%; left: 5%; width: 120px; transform: rotate(-20deg); }
+    .png-right { bottom: 15%; right: 5%; width: 100px; animation-delay: 2s; }
+    @keyframes floatSlow { 0% { transform: translateY(0); } 100% { transform: translateY(-20px); } }
+
+    /* Sections Shared */
+    .sec-container { position: relative; z-index: 1; padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+    .sec-header { text-align: center; margin-bottom: 50px; }
+    .sec-header h2 { font-family: 'Oswald', sans-serif; font-size: 2.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .sec-header h2 span { color: var(--accent-red); }
+    .sec-header p { color: var(--text-muted); margin-top: 10px; font-size: 1.05rem; }
+
+    /* Dark Cinematic Promo Video */
+    .video-wrapper { background: var(--bg-card); backdrop-filter: blur(16px); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle); max-width: 1000px; margin: 0 auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+    .promo-badge { position: absolute; top: 25px; right: 25px; background: var(--accent-red); color: #fff; font-size: 0.75rem; font-weight: 800; padding: 6px 14px; border-radius: 4px; letter-spacing: 2px; z-index: 10; text-transform: uppercase; pointer-events: none; }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 4px; background: #000; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: none; }
+
+    /* Facilities Grid */
+    .facility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .facility-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 35px 25px; text-align: center; transition: 0.4s; backdrop-filter: blur(10px); }
+    .facility-card:hover { transform: translateY(-8px); border-color: var(--accent-red); background: var(--bg-card-hover); box-shadow: 0 10px 30px rgba(225, 29, 72, 0.15); }
+    .facility-icon { font-size: 2.8rem; color: var(--accent-red); margin-bottom: 20px; }
+    .facility-card h3 { font-family: 'Oswald', sans-serif; font-size: 1.5rem; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase; }
+    .facility-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* Memberships & Supplements Menu */
+    .menu-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    @media(max-width: 768px) { .menu-container { grid-template-columns: 1fr; } }
+    .menu-box { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 35px; }
+    .menu-box h3.box-title { font-family: 'Oswald', sans-serif; font-size: 1.8rem; color: var(--accent-red); margin-bottom: 20px; border-bottom: 2px solid rgba(225,29,72,0.3); padding-bottom: 10px; text-transform: uppercase; }
+    .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px dashed var(--border-subtle); }
+    .menu-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .menu-info h4 { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 4px; text-transform: uppercase; }
+    .menu-info p { font-size: 0.85rem; color: var(--text-muted); }
+    .menu-price { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: var(--accent-gold); font-weight: 700; }
+
+    /* Real Google Reviews */
+    .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .review-card { background: rgba(10,10,10,0.6); backdrop-filter: blur(10px); padding: 30px; border-radius: 8px; border-top: 2px solid var(--accent-red); border-bottom: 1px solid var(--border-subtle); border-left: 1px solid var(--border-subtle); border-right: 1px solid var(--border-subtle); }
+    .stars { color: var(--accent-gold); margin-bottom: 15px; font-size: 1rem; }
+    .review-text { font-size: 0.95rem; font-style: italic; color: #e2e8f0; margin-bottom: 20px; line-height: 1.6; }
+    .reviewer { font-weight: 700; font-size: 0.9rem; color: var(--accent-red); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Footer */
+    footer { position: relative; z-index: 1; text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-subtle); background: #000; }
+    footer span { color: #fff; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- Dark Vibe Background -->
+  <div class="bg-main-image"></div>
+  <div class="bg-dark-overlay"></div>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader-title">Infinite <span>Gym</span></div>
+    <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="#" class="logo"><i class="fa-solid fa-dumbbell"></i> INFINITE GYM</a>
+    <a href="https://wa.me/919955277263?text=Hi%20Infinite%20Gym!%20I%20want%20to%20start%20my%20fitness%20journey.%20Can%20I%20get%20details%20on%20memberships?" target="_blank" class="nav-btn">Join Now</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-reel">
+    <!-- Floating PNGs -->
+    <img src="https://cdn-icons-png.flaticon.com/512/8243/8243916.png" alt="Dumbbell" class="floating-png png-left" style="filter: brightness(0) invert(1) opacity(0.3);">
+    
+    <div class="reel-content" data-aos="fade-up">
+      <div class="rating-badge">
+        <i class="fa-solid fa-star"></i> 4.9 / 5 (45+ Reviews in Dhanbad)
+      </div>
+      <h1>Push Your <span>Limits.</span></h1>
+      <p>Clean, spacious, and equipped with modern machines. Experience the best workout environment with an inspiring mountain view right here at Baliapur Hirak Rd.</p>
+      <a href="https://wa.me/919955277263?text=Hi%20Infinite%20Gym!%20I%20saw%20your%20website%20and%20want%20to%20join.%20What%20are%20the%20timings?" target="_blank" class="btn-book">
+        <i class="fa-brands fa-whatsapp"></i> Start Your Transformation
+      </a>
+    </div>
+  </header>
+
+  <!-- Dark Motivational Promo Video -->
+  <section class="sec-container" style="background: rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); padding-top: 60px; padding-bottom: 60px;">
+    <div class="sec-header" data-aos="fade-up">
+      <h2>The <span>Infinite</span> Vibe</h2>
+      <p>Hard work beats talent. See what goes down inside our walls.</p>
+    </div>
+    
+    <div class="video-wrapper" data-aos="zoom-in" data-aos-delay="100">
+      <div class="promo-badge">GYM TOUR</div>
+      <div class="video-container">
+        <!-- Intense Gym Motivation Video (Placeholder) -->
+        <iframe src="https://www.youtube.com/embed/z7hM3U3mepQ?autoplay=1&mute=1&loop=1&playlist=z7hM3U3mepQ&controls=0&showinfo=0&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us / Facilities -->
+  <section class="sec-container">
+    <div class="sec-header" data-aos="fade-up">
+      <h2>Premium <span>Facilities</span></h2>
+      <p>Everything you need for strength training and functional workouts.</p>
+    </div>
+    
+    <div class="facility-grid">
+      <div class="facility-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="facility-icon"><i class="fa-solid fa-dumbbell"></i></div>
+        <h3>Modern Equipment</h3>
+        <p>A wide variety of advanced, well-maintained machines for targeted muscle growth.</p>
+      </div>
+      <div class="facility-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="facility-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+        <h3>Spacious & Scenic</h3>
+        <p>A highly energetic atmosphere featuring a clean setup and a beautiful mountain view.</p>
+      </div>
+      <div class="facility-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="facility-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+        <h3>Expert Guidance</h3>
+        <p>Passionate, friendly owners and trainers dedicated to helping you stay fit safely.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing & Supplements Section -->
+  <section class="sec-container">
+    <div class="sec-header" data-aos="fade-up">
+      <h2>Memberships <span>& Pro-Shop</span></h2>
+      <p>Transparent pricing. No hidden fees. Elevate your performance.</p>
+    </div>
+    
+    <div class="menu-container">
+      <!-- Gym Memberships -->
+      <div class="menu-box" data-aos="fade-right">
+        <h3 class="box-title">Gym Access</h3>
+        <div class="menu-item"><div class="menu-info"><h4>1 Month Plan</h4><p>Full gym access + General Guidance</p></div><div class="menu-price">₹800</div></div>
+        <div class="menu-item"><div class="menu-info"><h4>3 Months Plan</h4><p>Save upfront. Full access.</p></div><div class="menu-price">₹2,100</div></div>
+        <div class="menu-item"><div class="menu-info"><h4>6 Months Plan</h4><p>Dedicated commitment.</p></div><div class="menu-price">₹3,800</div></div>
+        <div class="menu-item"><div class="menu-info"><h4>Annual MVP</h4><p>Best value for serious athletes.</p></div><div class="menu-price">₹7,000</div></div>
+      </div>
+
+      <!-- Supplements Integration (Invisible Context Applied) -->
+      <div class="menu-box" data-aos="fade-left">
+        <h3 class="box-title">Nutrition Desk</h3>
+        <div class="menu-item">
+          <div class="menu-info">
+            <h4>MB Whey Protein (Scoop)</h4>
+            <p>Post-workout fast absorbing muscle recovery</p>
+          </div>
+          <div class="menu-price">₹80</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-info">
+            <h4>GNC Pro Performance Creatine</h4>
+            <p>Monohydrate serving for peak strength & volume</p>
+          </div>
+          <div class="menu-price">₹40</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-info">
+            <h4>Mass Gainer Shake</h4>
+            <p>High-calorie blend for bulking phases</p>
+          </div>
+          <div class="menu-price">₹100</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-info">
+            <h4>Pre-Workout Shot</h4>
+            <p>Intense energy and focus before heavy lifts</p>
+          </div>
+          <div class="menu-price">₹50</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real Client Reviews -->
+  <section class="sec-container">
+    <div class="sec-header" data-aos="fade-up">
+      <h2>Iron <span>Testimonials</span></h2>
+      <p>Hear from our active members at Chanakya Nagar.</p>
+    </div>
+    <div class="review-grid">
+      <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="review-text">"Really happy with my experience! Great atmosphere, well maintained, and has a good variety of equipment for strength training and functional workouts."</p>
+        <p class="reviewer">— Shivam Sharma</p>
+      </div>
+      <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="review-text">"Clean, spacious, and modern. Just joined today and the facilities are nice. The view is also great from here of the mountain. Highly recommended! 💯"</p>
+        <p class="reviewer">— Ayush Sinha (Local Guide)</p>
+      </div>
+      <div class="review-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="review-text">"The setup is clean, modern, and has all essential equipment. The atmosphere is energetic, and the owner is friendly and passionate about fitness."</p>
+        <p class="reviewer">— Adi Tya</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Location Info & Policies -->
+  <section class="sec-container" style="background: rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.05);">
+    <div class="sec-header" data-aos="fade-up">
+      <h2>Visit <span>Infinite Gym</span></h2>
+      <p style="margin-bottom: 20px;"><i class="fa-solid fa-location-dot" style="color:var(--accent-red); margin-right:8px;"></i> PREM PLAZA BYPASS, Baliapur Hirak Rd, Chanakya Nagar, Dhanbad</p>
+      <p><i class="fa-solid fa-clock" style="color:var(--accent-red); margin-right:8px;"></i> Open Daily until 12:00 PM (Morning Slot) | <i class="fa-solid fa-phone" style="color:var(--accent-red); margin-left:15px; margin-right:8px;"></i> 099552 77263</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Infinite Gym LLP, Dhanbad.</p>
+    <p style="margin-top: 8px; font-size: 0.75rem; color: #555;">Website Powered by <span style="color:var(--accent-red);">Apex Studios Dhanbad</span> | Flat ₹1,999 Express Setup</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      gsap.to(".loader-bar", { width: "100%", duration: 1.2, ease: "power2.inOut" });
+      setTimeout(() => {
+        gsap.to("#preloader", { opacity: 0, duration: 0.6, onComplete: () => {
+          document.getElementById('preloader').style.display = 'none';
+          AOS.init({ duration: 800, once: true });
+        }});
+      }, 1400);
+    });
+  </script>
+</body>
+</html>
